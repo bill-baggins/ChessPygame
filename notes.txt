@@ -1,3 +1,0 @@
-1) Remember that when the user clicks the mouse they can click on a location that is outside of the grid
-   if they click on the very edge of the window. This needs to be handled as it will cause an OutOfBoundsException
-   and crash the whole program.
