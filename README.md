@@ -1,2 +1,2 @@
 # ChessPygame
-(WIP) Two-player chess in pygame.
+(WIP) Two-player chess implemented in pygame.
