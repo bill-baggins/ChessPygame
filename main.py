@@ -14,7 +14,9 @@ def menu_loop():
     global window
     menu_ent = menu.MenuSystem()
     menu.initialize(window, menu_ent)
-    while window.menu_state == MenuState.Menu:
+    while window.menu_state == MenuState.Menu or \
+            window.menu_state == MenuState.Options:
+
         menu.event_loop(window, menu_ent)
         menu.update(window, menu_ent)
         menu.draw(window, menu_ent)

@@ -42,7 +42,10 @@ def event_loop(window: Window, m_sys: MenuSystem):
         if event.type == MOUSEBUTTONDOWN:
             if event.button == MouseButton.Left:
                 mouse_pos = pygame.mouse.get_pos()
-                m_sys.main_menu.listen_for_button_events(mouse_pos, window)
+                if window.menu_state == MenuState.Menu:
+                    m_sys.main_menu.listen_for_button_events(mouse_pos, window)
+                elif window.menu_state == MenuState.Options:
+                    m_sys.option_menu.listen_for_button_events(mouse_pos, window)
 
 
 def update(window: Window, m_sys: MenuSystem):
@@ -56,6 +59,7 @@ def draw(window: Window, m_sys: MenuSystem):
         for ent in m_sys.main_menu.entities:
             ent.draw_to(window.screen)
     elif window.menu_state == MenuState.Options:
-        pass
+        for ent in m_sys.option_menu.entities:
+            ent.draw_to(window.screen)
 
     pygame.display.update()

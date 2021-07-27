@@ -18,6 +18,7 @@ class Color:
 
 
 class GameFont:
+    Small = pygame.font.Font("resource/fonts/lunchds.ttf", 20)
     Default = pygame.font.Font("resource/fonts/lunchds.ttf", 30)
     Title = pygame.font.Font("resource/fonts/lunchds.ttf", 50)
     Arrow = pygame.font.Font("resource/fonts/lunchds.ttf", 80)

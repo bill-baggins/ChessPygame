@@ -32,7 +32,7 @@ class TextBox(object):
         self.text_size = text_size
         self.text_color = text_color
 
-        self.font = font or pygame.font.Font(pygame.font.get_default_font(), text_size)
+        self.font = font or pygame.font.Font("resource/fonts/lunchds.ttf", text_size)
 
         self.surf = pygame.Surface(self.size)
         self.width = self.surf.get_width()
