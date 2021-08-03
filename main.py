@@ -1,7 +1,10 @@
 # main.py: Application entry point.
+
+
 def main_loop():
     while window.running:
-        if window.menu_state == MenuState.Menu:
+        if window.menu_state == MenuState.Menu or \
+                window.menu_state == MenuState.Options:
             menu_loop()
         elif window.menu_state == MenuState.Game:
             game_loop()
@@ -26,9 +29,12 @@ def menu_loop():
 def game_loop():
     global window
     game_ent = game.GameSystem()
+
     # Edit the window and game_ent objects
     game.initialize(window, game_ent)
-    while window.menu_state == MenuState.Game:
+    while window.menu_state == MenuState.Game or \
+            window.menu_state == MenuState.Paused:
+
         game.event_loop(window, game_ent)
         game.update(window, game_ent)
         game.draw(window, game_ent)
@@ -37,19 +43,18 @@ def game_loop():
 
 if __name__ == "__main__":
     import pygame
+    from pygame.constants import *
     pygame.init()
     pygame.font.init()
-
-    from pygame.constants import *
 
     from base.window import Window, MenuState
     from base.settings import SCREEN_SETTING
 
-    import chess.game as game
-    import chess.menu as menu
-
     pygame.display.set_mode(SCREEN_SETTING["size"], FULLSCREEN if SCREEN_SETTING["fullscreen"] else 0)
     pygame.display.set_caption(SCREEN_SETTING["title"])
+
+    import chess.game as game
+    import chess.menu as menu
 
     window = Window()
     

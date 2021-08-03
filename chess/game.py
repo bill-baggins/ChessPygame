@@ -4,6 +4,7 @@ from pygame.constants import *
 from dataclasses import dataclass
 
 from base.window import Window, MenuState
+from base.common import Color
 from chess.chess_entities import Grid
 
 
@@ -18,7 +19,8 @@ def initialize(window: Window, g_sys: GameSystem):
     window.screen_width = window.screen.get_width()
     window.screen_height = window.screen.get_height()
 
-    g_sys.grid = Grid(window.screen_width, window.screen_height)
+    g_sys.grid = Grid(window.screen_width, window.screen_height,
+                      Color.Gray, Color.Coffee)
 
 
 def event_loop(window: Window, g_sys: GameSystem):

@@ -1,27 +1,51 @@
-import pygame
-import pygame.draw
+# chess_entities.py: Contains definitions for each of the chess pieces, the
+# chess board, and the players.
 
-from pygame.math import Vector2
+# TODO: Add player logic. Players will be able to keep track of their pieces
+#       through a dictionary.
 
 from dataclasses import dataclass
-from enum import Enum
+from typing import Union
+
+import pygame
+import pygame.draw
+from pygame.math import *
 
 from base.common import Color
+from chess.chess_exception import ChessException
+from chess.chess_texture import chess_texture as ct
+
+from chess.user_option import USER_OPTION
 
 
-class ChessException(Exception):
-    def __init__(self, *args):
-        super().__init__(args)
+class Vector2(Vector2):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+
+    def as_list(self) -> 'list[float]':
+        return [self.x, self.y]
+
+
+p1 = USER_OPTION.get("player_one_index")
+p2 = USER_OPTION.get("player_two_index")
 
 
 class EntityID:
-    Empty = 0
-    Pawn = 1
-    Rook = 2
-    Knight = 3
-    Bishop = 4
-    Queen = 5
-    King = 6
+    global p1, p2
+
+    Empty = 0, pygame.Surface([0, 0])
+    PawnP1 = 1, ct.chess_set[p1][0]
+    KnightP1 = 2, ct.chess_set[p1][1]
+    BishopP1 = 3, ct.chess_set[p1][2]
+    RookP1 = 4, ct.chess_set[p1][3]
+    QueenP1 = 5, ct.chess_set[p1][4]
+    KingP1 = 6, ct.chess_set[p1][5]
+    PawnP2 = 7, ct.chess_set[p2][0]
+    KnightP2 = 8, ct.chess_set[p2][1]
+    BishopP2 = 9, ct.chess_set[p2][2]
+    RookP2 = 10, ct.chess_set[p2][3]
+    QueenP2 = 11, ct.chess_set[p2][4]
+    KingP2 = 12, ct.chess_set[p2][5]
 
 
 @dataclass
@@ -50,16 +74,19 @@ class ChessPiece:
         :return:
         returns None
         """
+        raise NotImplementedError
 
     def draw_to(self, board: pygame.Surface):
         """
         Draws the chess piece to the board. Each chess piece should be the size
         of a grid square, and their drawn position is determined by its position
         on the grid.
+        Do not override this function.
 
-        :param screen: The chess board, where the piece will be drawn.
+        :param board: The chess board, where the piece will be drawn.
         :return:
         """
+        board.blit(self.texture, self.pos.as_list())
 
     def show_legal_moves(self):
         """
@@ -73,21 +100,35 @@ class ChessPiece:
         :return: None.
         None
         """
+        raise NotImplementedError
+
+    def get_legal_moves(self):
+        """
+        Custom defined function for each piece class that governs how and where
+        chess pieces are allowed to move within the grid.
+
+        :return:
+        """
+        raise NotImplementedError
 
 
 class Grid:
     def __init__(self, 
                  screen_width: int, 
-                 screen_height: int):
+                 screen_height: int,
+                 first_square_color: Union[tuple, Color],
+                 second_square_color: Union[tuple, Color]):
 
         self.arr_width = 8
         self.arr_height = 8
+        self.first_square_color = first_square_color
+        self.second_square_color = second_square_color
 
         self.arr = [
-            [EntityID.Empty for _ in range(self.arr_width)] for _ in range(self.arr_height)
+            [EntityID.KingP1 for _ in range(self.arr_width)] for _ in range(self.arr_height)
         ]
-        self.grid_square_width = self.arr_width * 5
-        self.grid_square_height = self.arr_height * 5
+        self.grid_square_width = USER_OPTION["grid_square_width"]
+        self.grid_square_height = USER_OPTION["grid_square_height"]
 
         self.grid_surface = pygame.Surface([self.grid_square_width * self.arr_width, 
                                             self.grid_square_height * self.arr_height]).convert()
@@ -102,6 +143,14 @@ class Grid:
     def draw_to(self, screen: pygame.Surface):
         if self.arr is None:
             raise ChessException("Error: The grid array is empty!")
+
+        for x in range(len(self.arr)):
+            for y in range(len(self.arr[x])):
+                piece = self.arr[x][y]
+                if piece[0] != 0:
+                    self.grid_surface.blit(piece[1], [x * self.grid_square_width,
+                                                      y * self.grid_square_height])
+
         screen.blit(self.grid_surface, [self.x, self.y])
 
     def __draw_rect_on_grid_surf(self, x: int, y: int, color: Color):
@@ -116,9 +165,9 @@ class Grid:
         for x in range(self.arr_width):
             for y in range(self.arr_height):
                 if (x + y) % 2 == 0:
-                    self.__draw_rect_on_grid_surf(x, y, Color.Coffee)
+                    self.__draw_rect_on_grid_surf(x, y, self.second_square_color)
                 else:
-                    self.__draw_rect_on_grid_surf(x, y, Color.White)
+                    self.__draw_rect_on_grid_surf(x, y, self.first_square_color)
 
 
 class Pawn(ChessPiece):
@@ -129,4 +178,100 @@ class Pawn(ChessPiece):
         super().__init__(texture, pos, legal_moves)
 
     def move(self, clicked_position: Vector2):
-        super().move(clicked_position)
+        pass
+
+    def show_legal_moves(self):
+        pass
+
+    def get_legal_moves(self):
+        pass
+
+
+class Rook(ChessPiece):
+    def __init__(self,
+                 texture: pygame.Surface,
+                 pos: Vector2,
+                 legal_moves: 'list[Vector2]'):
+
+        super().__init__(texture, pos, legal_moves)
+
+    def move(self, clicked_position: Vector2):
+        pass
+
+    def show_legal_moves(self):
+        pass
+
+    def get_legal_moves(self):
+        pass
+
+
+class Knight(ChessPiece):
+    def __init__(self,
+                 texture: pygame.Surface,
+                 pos: Vector2,
+                 legal_moves: 'list[Vector2]'):
+
+        super().__init__(texture, pos, legal_moves)
+
+    def move(self, clicked_position: Vector2):
+        pass
+
+    def show_legal_moves(self):
+        pass
+
+    def get_legal_moves(self):
+        pass
+
+
+class Bishop(ChessPiece):
+    def __init__(self,
+                 texture: pygame.Surface,
+                 pos: Vector2,
+                 legal_moves: 'list[Vector2]'):
+
+        super().__init__(texture, pos, legal_moves)
+
+    def move(self, clicked_position: Vector2):
+        pass
+
+    def show_legal_moves(self):
+        pass
+
+    def get_legal_moves(self):
+        pass
+
+
+class Queen(ChessPiece):
+    def __init__(self,
+                 texture: pygame.Surface,
+                 pos: Vector2,
+                 legal_moves: 'list[Vector2]'):
+
+        super().__init__(texture, pos, legal_moves)
+
+    def move(self, clicked_position: Vector2):
+        pass
+
+    def show_legal_moves(self):
+        pass
+
+    def get_legal_moves(self):
+        pass
+
+
+class King(ChessPiece):
+    def __init__(self,
+                 texture: pygame.Surface,
+                 pos: Vector2,
+                 legal_moves: 'list[Vector2]'):
+
+        super().__init__(texture, pos, legal_moves)
+
+    def move(self, clicked_position: Vector2):
+        pass
+
+    def show_legal_moves(self):
+        pass
+
+    def get_legal_moves(self):
+        pass

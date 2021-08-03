@@ -1,3 +1,6 @@
+# family.py: Contains the Family class, which uses a list to hold
+# multiple game entities.
+
 from dataclasses import dataclass
 from .window import Window
 

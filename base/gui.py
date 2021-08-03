@@ -38,6 +38,7 @@ class TextBox(object):
         self.width = self.surf.get_width()
         self.height = self.surf.get_height()
         self.rect = self.surf.get_rect(topleft=self.pos)
+        self.text_render = None
 
         self.__draw_to_self(self.font)
         self.__center_text()
@@ -64,6 +65,7 @@ class TextBox(object):
         self.text_pos = new_pos
         self.surf.fill(self.background_color)
         self.surf.blit(self.text_render, self.text_pos)
+        self.__draw_to_self(self.font)
 
     def __draw_to_self(self, font: pygame.font.Font) -> None:
         self.surf.fill(self.background_color)

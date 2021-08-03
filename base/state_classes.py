@@ -4,7 +4,8 @@ class MenuState:
     (Menu,
      Options,
      Game,
-     Quit) = range(0, 4)
+     Paused,
+     Quit) = range(0, 5)
 
 
 class GameState:

@@ -5,13 +5,13 @@ from dataclasses import dataclass
 
 from base.window import Window, MenuState
 from base.common import Color, GameFont, MouseButton
-from chess.menu_entities import MainMenu, OptionMenu
+from chess.menu_entities import MainMenuFamily, OptionMenuFamily
 
 
 @dataclass
 class MenuSystem:
-    main_menu: MainMenu = MainMenu()
-    option_menu: OptionMenu = OptionMenu()
+    main_menu: MainMenuFamily = MainMenuFamily()
+    option_menu: OptionMenuFamily = OptionMenuFamily()
 
 
 def initialize(window: Window, m_sys: MenuSystem):

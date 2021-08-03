@@ -8,7 +8,7 @@ from base.state_classes import MenuState
 
 
 @dataclass
-class MainMenu(Family):
+class MainMenuFamily(Family):
     title_textbox: TextBox = None
     start_button: Button = None
     option_button: Button = None
@@ -73,13 +73,21 @@ class MainMenu(Family):
                     possible_event(window)
 
 
-class OptionMenu(Family):
+class OptionMenuFamily(Family):
     options_text_box: TextBox = None
     sounds_button: Button = None
     mm_button: Button = None
 
+    __toggle_sound: bool = False
+
     def __sounds_button_action(self, window: Window):
-        pass
+        if self.__toggle_sound:
+            self.sounds_button.text = "Sound: On"
+            self.sounds_button.update_text_pos()
+        else:
+            self.sounds_button.text = "Sound: Off"
+            self.sounds_button.update_text_pos()
+        self.__toggle_sound = not self.__toggle_sound
 
     def __mm_button_action(self, window: Window):
         window.menu_state = MenuState.Menu
