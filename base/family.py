@@ -1,5 +1,5 @@
 # family.py: Contains the Family class, which uses a list to hold
-# multiple game entities.
+# multiple game game_component.
 
 from dataclasses import dataclass
 from .window import Window
@@ -8,7 +8,7 @@ from .window import Window
 @dataclass
 class Family:
     """
-    A simple class that contains game entities that are related to one another
+    A simple class that contains game game_component that are related to one another
     in some way. For example, there can be a family of main menu buttons and a
     family of option menu buttons.
     """
